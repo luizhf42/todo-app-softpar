@@ -91,10 +91,10 @@ const handleStatusChange = () => {
       &.dropdown {
         color: var(--primary);
         &.completed {
-          color: #196619;
+          color: var(--completed);
         }
         &.pending {
-          color: #c1c113;
+          color: var(--pending);
         }
       }
     }

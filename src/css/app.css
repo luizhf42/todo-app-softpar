@@ -1,5 +1,7 @@
 :root {
 	--primary: #075985;
+	--completed: #196619;
+	--pending: #c1c113;
 }
 
 * {

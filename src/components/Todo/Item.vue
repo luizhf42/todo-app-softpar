@@ -53,20 +53,20 @@ li {
 
   &.completed {
     text-decoration: line-through;
-    border-color: #196619;
+    border-color: var(--completed);
 
     select {
-      outline-color: #196619;
-      border-color: #196619;
+      outline-color: var(--completed);
+      border-color: var(--completed);
     }
   }
 
   &.pending {
-    border-color: #c1c113;
+    border-color: var(--pending);
 
     select {
-      outline-color: #c1c113;
-      border-color: #c1c113;
+      outline-color: var(--pending);
+      border-color: var(--pending);
     }
   }
 
