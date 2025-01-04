@@ -11,6 +11,9 @@ importers:
       '@quasar/extras':
         specifier: ^1.16.4
         version: 1.16.15
+      pinia:
+        specifier: ^2.3.0
+        version: 2.3.0(typescript@5.5.4)(vue@3.5.13(typescript@5.5.4))
       quasar:
         specifier: ^2.16.0
         version: 2.17.6
@@ -26,7 +29,7 @@ importers:
         version: 9.17.0
       '@quasar/app-vite':
         specifier: ^2.0.0
-        version: 2.0.5(@types/node@20.17.11)(eslint@9.17.0)(quasar@2.17.6)(rollup@4.29.1)(terser@5.37.0)(typescript@5.5.4)(vue-router@4.5.0(vue@3.5.13(typescript@5.5.4)))(vue@3.5.13(typescript@5.5.4))
+        version: 2.0.5(@types/node@20.17.11)(eslint@9.17.0)(pinia@2.3.0(typescript@5.5.4)(vue@3.5.13(typescript@5.5.4)))(quasar@2.17.6)(rollup@4.29.1)(terser@5.37.0)(typescript@5.5.4)(vue-router@4.5.0(vue@3.5.13(typescript@5.5.4)))(vue@3.5.13(typescript@5.5.4))
       '@types/node':
         specifier: ^20.5.9
         version: 20.17.11
@@ -1657,6 +1660,15 @@ packages:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
 
+  pinia@2.3.0:
+    resolution: {integrity: sha512-ohZj3jla0LL0OH5PlLTDMzqKiVw2XARmC1XYLdLWIPBMdhDW/123ZWr4zVAhtJm+aoSkFa13pYXskAvAscIkhQ==}
+    peerDependencies:
+      typescript: '>=4.4.4'
+      vue: ^2.7.0 || ^3.5.11
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   postcss-selector-parser@6.1.2:
     resolution: {integrity: sha512-Q8qQfPiZ+THO/3ZrOrO0cJJKfpYCagtMUkXbnEfmgUjwXg6z/WBeOyS9APBBPCTSiDV+s4SwQGu8yFsiMRIudg==}
     engines: {node: '>=4'}
@@ -2256,6 +2268,17 @@ packages:
   vscode-uri@3.0.8:
     resolution: {integrity: sha512-AyFQ0EVmsOZOlAnxoFOGOq1SQDWAB7C6aqMGS23svWAllfOaxbuFvcT8D1i8z3Gyn8fraVeZNNmN6e9bxxXkKw==}
 
+  vue-demi@0.14.10:
+    resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
+    engines: {node: '>=12'}
+    hasBin: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   vue-eslint-parser@9.4.3:
     resolution: {integrity: sha512-2rYRLWlIpaiN8xbPiDyXZXRgLGOtWxERV7ND5fFAv5qo1D2N9Fu9MNajBNc6o13lZ+24DAWCkQCvj4klgmcITg==}
     engines: {node: ^14.17.0 || >=16.0.0}
@@ -2540,7 +2563,7 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@quasar/app-vite@2.0.5(@types/node@20.17.11)(eslint@9.17.0)(quasar@2.17.6)(rollup@4.29.1)(terser@5.37.0)(typescript@5.5.4)(vue-router@4.5.0(vue@3.5.13(typescript@5.5.4)))(vue@3.5.13(typescript@5.5.4))':
+  '@quasar/app-vite@2.0.5(@types/node@20.17.11)(eslint@9.17.0)(pinia@2.3.0(typescript@5.5.4)(vue@3.5.13(typescript@5.5.4)))(quasar@2.17.6)(rollup@4.29.1)(terser@5.37.0)(typescript@5.5.4)(vue-router@4.5.0(vue@3.5.13(typescript@5.5.4)))(vue@3.5.13(typescript@5.5.4))':
     dependencies:
       '@quasar/render-ssr-error': 1.0.3
       '@quasar/ssl-certificate': 1.0.0
@@ -2582,6 +2605,7 @@ snapshots:
       webpack-merge: 6.0.1
     optionalDependencies:
       eslint: 9.17.0
+      pinia: 2.3.0(typescript@5.5.4)(vue@3.5.13(typescript@5.5.4))
       typescript: 5.5.4
     transitivePeerDependencies:
       - '@types/node'
@@ -3953,6 +3977,16 @@ snapshots:
 
   picomatch@4.0.2: {}
 
+  pinia@2.3.0(typescript@5.5.4)(vue@3.5.13(typescript@5.5.4)):
+    dependencies:
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.13(typescript@5.5.4)
+      vue-demi: 0.14.10(vue@3.5.13(typescript@5.5.4))
+    optionalDependencies:
+      typescript: 5.5.4
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+
   postcss-selector-parser@6.1.2:
     dependencies:
       cssesc: 3.0.0
@@ -4493,6 +4527,10 @@ snapshots:
       vscode-languageserver-protocol: 3.16.0
 
   vscode-uri@3.0.8: {}
+
+  vue-demi@0.14.10(vue@3.5.13(typescript@5.5.4)):
+    dependencies:
+      vue: 3.5.13(typescript@5.5.4)
 
   vue-eslint-parser@9.4.3(eslint@9.17.0):
     dependencies:
