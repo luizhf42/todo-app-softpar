@@ -1,8 +1,8 @@
 {
 	"name": "todo-app-softpar",
 	"version": "0.0.1",
-	"description": "A Quasar Project",
-	"productName": "Todo App",
+	"description": "Lista de Tarefas - Teste prático Softpar",
+	"productName": "Lista de Tarefas",
 	"author": "luizhf42 <luizhf42@gmail.com>",
 	"type": "module",
 	"private": true,
