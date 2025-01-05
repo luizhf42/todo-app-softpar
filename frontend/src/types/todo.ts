@@ -2,7 +2,7 @@ export interface Todo {
   id: number;
   title: string;
   description: string;
-  createdAt: Date;
-  completedAt: Date | null;
+  created_at: Date;
+  completed_at: Date | null;
   status: "pending" | "in progress" | "completed";
 }
