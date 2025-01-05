@@ -28,8 +28,6 @@ class TodoController extends Controller
         ]);
 
         $todo = new Todo($validated);
-
-        // Set completed_at based on initial status
         $todo->completed_at = ($validated['status'] === 'completed')
             ? Carbon::now('America/Sao_Paulo')
             : null;
@@ -47,13 +45,10 @@ class TodoController extends Controller
             'status' => 'sometimes|required|in:pending,in progress,completed'
         ]);
 
-        // Handle completed_at based on status change
         if (isset($validated['status'])) {
-            // If changing to completed, set timestamp
             if ($validated['status'] === 'completed') {
                 $todo->completed_at = Carbon::now('America/Sao_Paulo');
             }
-            // If changing from completed to any other status, clear timestamp
             else if ($todo->status === 'completed') {
                 $todo->completed_at = null;
             }

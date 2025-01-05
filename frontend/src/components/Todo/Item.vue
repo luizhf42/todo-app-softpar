@@ -36,13 +36,10 @@ const todo = ref(props.todo);
 const showDetails = ref(false);
 
 const formatDate = (date: Date) => {
-  console.log(date);
-
   const newDate = new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "short",
     timeStyle: "short",
   }).format(new Date(date));
-  console.log(newDate);
 
   return newDate;
 };
@@ -52,7 +49,6 @@ const updateShowDetails = (newShowDetails: boolean) => {
 };
 
 const updateTodo = (newTodo: Todo) => {
-  console.log(newTodo)
   todo.value = newTodo;
 };
 </script>

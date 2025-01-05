@@ -52,7 +52,7 @@ watch(
   () => openEditor,
   async (isOpen) => {
     if (isOpen) {
-      await nextTick(); // Ensure DOM is updated
+      await nextTick();
       titleInput.value?.focus();
     }
   }
