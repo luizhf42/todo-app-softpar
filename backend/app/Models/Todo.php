@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Todo extends Model
 {
@@ -11,44 +12,48 @@ class Todo extends Model
     protected $fillable = [
         'title',
         'description',
-        'completed_at',
         'status'
     ];
 
-    protected $casts = [
-        'created_at' => 'datetime',
-        'completed_at' => 'datetime'
+    protected $dates = [
+        'created_at',
+        'completed_at'
     ];
 
     const STATUS_PENDING = 'pending';
-    const STATUS_IN_PROGRESS = 'in_progress';
+    const STATUS_IN_PROGRESS = 'in progress';
     const STATUS_COMPLETED = 'completed';
 
-    public static function getStatuses(): array
+    protected static function boot()
     {
-        return [
-            self::STATUS_PENDING,
-            self::STATUS_IN_PROGRESS,
-            self::STATUS_COMPLETED
-        ];
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_at = Carbon::now('America/Sao_Paulo');
+        });
     }
 
-    public function markAsCompleted(): void
+    public function getCreatedAtAttribute($value)
     {
-        $this->completed_at = now();
+        return $value ? Carbon::parse($value)->setTimezone('America/Sao_Paulo') : null;
+    }
+
+    public function getCompletedAtAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->setTimezone('America/Sao_Paulo') : null;
+    }
+
+    public function markAsCompleted()
+    {
+        $this->completed_at = Carbon::now('America/Sao_Paulo');
         $this->status = self::STATUS_COMPLETED;
         $this->save();
     }
 
-    public function markAsInProgress(): void
+    public function markAsInProgress()
     {
         $this->status = self::STATUS_IN_PROGRESS;
-        $this->save();
-    }
-
-    public function markAsPending(): void
-    {
-        $this->status = self::STATUS_PENDING;
+        $this->completed_at = null;
         $this->save();
     }
 }

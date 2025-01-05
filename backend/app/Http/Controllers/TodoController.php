@@ -4,83 +4,70 @@ namespace App\Http\Controllers;
 
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class TodoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        // Return all todos
-        return Todo::all();
+        $todos = Todo::all();
+        return response()->json($todos);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function show(Todo $todo)
+    {
+        return response()->json($todo);
+    }
+
     public function store(Request $request)
     {
-        // Validate the request data
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'status' => 'in:pending,in_progress,completed',
+            'status' => 'required|in:pending,in progress,completed'
         ]);
 
-        // Create a new todo
-        $todo = Todo::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => $request->status ?? 'pending', // Default to 'pending'
-        ]);
+        $todo = new Todo($validated);
 
-        return response()->json($todo, 201); // Return created todo with status code 201
+        // Set completed_at based on initial status
+        $todo->completed_at = ($validated['status'] === 'completed')
+            ? Carbon::now('America/Sao_Paulo')
+            : null;
+
+        $todo->save();
+
+        return response()->json($todo, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(Request $request, Todo $todo)
     {
-        // Find the todo by ID or return a 404 response
-        $todo = Todo::findOrFail($id);
-        return response()->json($todo);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        // Find the todo by ID or return a 404 response
-        $todo = Todo::findOrFail($id);
-
-        // Validate the request data
-        $request->validate([
-            'title' => 'string|max:255',
-            'description' => 'string',
-            'status' => 'in:pending,in_progress,completed',
-            'completed_at' => 'nullable|date',
+        $validated = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string',
+            'status' => 'sometimes|required|in:pending,in progress,completed'
         ]);
 
-        // Update the todo
-        $todo->update($request->all());
+        // Handle completed_at based on status change
+        if (isset($validated['status'])) {
+            // If changing to completed, set timestamp
+            if ($validated['status'] === 'completed') {
+                $todo->completed_at = Carbon::now('America/Sao_Paulo');
+            }
+            // If changing from completed to any other status, clear timestamp
+            else if ($todo->status === 'completed') {
+                $todo->completed_at = null;
+            }
+        }
+
+        $todo->fill($validated);
+        $todo->save();
 
         return response()->json($todo);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Todo $todo)
     {
-        // Find the todo by ID or return a 404 response
-        $todo = Todo::findOrFail($id);
-
-        // Delete the todo
         $todo->delete();
-
-        return response()->noContent(); // Return 204 No Content
+        return response()->json(null, 204);
     }
 }
