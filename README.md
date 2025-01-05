@@ -136,6 +136,10 @@ O servidor será aberto em `http://localhost:9000`.
 ![](./db-diagram.png)
 Decidi manter apenas uma tabela pois não vi necessidade de adicionar outras ou de ter relacionamentos nesse caso. As colunas refletem o que foi pedido no desafio.
 
+
+## Demo
+![](./screenshot.png)
+
 ---
 ## Autor
 
