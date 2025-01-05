@@ -2,7 +2,8 @@
   <ul>
     <TodoItem v-for="todo in todos" :key="todo.id" :todo="todo" />
   </ul>
-  <div class="no-todos" v-if="todos.length === 0">Nenhuma tarefa a exibir!</div>
+  <div v-if="isLoading">Carregando suas tarefas...</div>
+  <div v-if="todos.length === 0 && !isLoading">Nenhuma tarefa a exibir!</div>
 </template>
 
 <script setup lang="ts">
@@ -11,6 +12,7 @@ import type { Todo } from "src/types/todo";
 
 defineProps<{
   todos: Todo[];
+  isLoading: boolean;
 }>();
 </script>
 
@@ -21,7 +23,7 @@ ul {
   margin: 0;
 }
 
-.no-todos {
+div {
   text-align: center;
 }
 </style>

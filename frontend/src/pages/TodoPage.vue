@@ -3,7 +3,10 @@
     <TodoForm />
     <h2>Tarefas</h2>
     <TodoFilters @update-filters="updateFilters" />
-    <TodoList :todos="filteredAndOrderedTodos" />
+    <TodoList
+      :todos="filteredAndOrderedTodos"
+      :isLoading="todoStore.isLoading"
+    />
   </div>
 </template>
 
@@ -49,7 +52,9 @@ const filteredAndOrderedTodos = computed(() => {
 
   todos.sort((a, b) => {
     if (orderBy.value === "date") {
-      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+      return (
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
     } else if (orderBy.value === "title") {
       return a.title.localeCompare(b.title);
     }
