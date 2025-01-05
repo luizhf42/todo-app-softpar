@@ -3,7 +3,7 @@
     <TodoItem v-for="todo in todos" :key="todo.id" :todo="todo" />
   </ul>
   <div v-if="isLoading">Carregando suas tarefas...</div>
-  <div v-if="todos.length === 0 && !isLoading">Nenhuma tarefa a exibir!</div>
+  <div v-else-if="todos.length === 0">Nenhuma tarefa a exibir!</div>
 </template>
 
 <script setup lang="ts">
