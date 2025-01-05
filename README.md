@@ -116,7 +116,7 @@ cd frontend # acesse a pasta de frontend
 
 npm install # instale as dependências
 
-quasar dev # execute o servidor de desenvolvimento
+npm run dev # execute o servidor de desenvolvimento
 ```
 O servidor será aberto em `http://localhost:9000`.
 

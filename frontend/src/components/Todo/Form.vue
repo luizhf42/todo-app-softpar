@@ -1,5 +1,5 @@
 <template>
-  <form @submit="addTodo">
+  <form @submit.prevent="addTodo">
     <label>
       Título:
       <input v-model.trim="title" />
