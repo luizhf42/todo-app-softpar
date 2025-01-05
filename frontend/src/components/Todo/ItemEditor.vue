@@ -1,22 +1,22 @@
 <template>
   <div class="wrapper" v-show="openEditor">
     <dialog open>
-      <h2>Editar Tarefa "{{ todo.title.valueOf() }}"</h2>
+      <h2>Editar Tarefa "{{ todo.title }}"</h2>
       <form>
         <label>
           Título:
-          <input type="text" v-model="newTitle" />
+          <input type="text" v-model="newTitle" ref="titleInput" />
         </label>
         <label>
           Descrição:
           <input type="text" v-model="newDescription" />
         </label>
         <div class="buttons">
-          <button @click="emit('close-dialog')" class="cancel-button">
+          <button @click.prevent="emit('cancel')" class="cancel-button">
             Cancelar
           </button>
           <button
-            @click="handleClick"
+            @click.prevent="handleSubmit"
             class="primary-button"
             :disabled="areInputsEmpty"
           >
@@ -31,14 +31,14 @@
 <script setup lang="ts">
 import { useTodosStore } from "src/stores/todos";
 import type { Todo } from "src/types/todo";
-import { computed, ref } from "vue";
+import { computed, nextTick, ref, watch } from "vue";
 
-const { todo } = defineProps<{
+const { todo, openEditor } = defineProps<{
   openEditor: boolean;
   todo: Todo;
 }>();
 
-const emit = defineEmits(["close-dialog"]);
+const emit = defineEmits(["cancel", "submit"]);
 
 const { updateTodo } = useTodosStore();
 const newTitle = ref(todo.title);
@@ -47,13 +47,25 @@ const areInputsEmpty = computed(
   () => newTitle.value === "" || newDescription.value === ""
 );
 
-const handleClick = () => {
-  if (!areInputsEmpty.value)
-    updateTodo(todo.id, {
+const titleInput = ref<HTMLInputElement | null>(null);
+watch(
+  () => openEditor,
+  async (isOpen) => {
+    if (isOpen) {
+      await nextTick(); // Ensure DOM is updated
+      titleInput.value?.focus();
+    }
+  }
+);
+
+const handleSubmit = async () => {
+  if (!areInputsEmpty.value) {
+    const updatedTodo = await updateTodo(todo.id, {
       title: newTitle.value,
       description: newDescription.value,
     });
-  emit("close-dialog");
+    emit("submit", updatedTodo);
+  }
 };
 </script>
 

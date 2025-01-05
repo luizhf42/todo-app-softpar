@@ -23,7 +23,12 @@
   </div>
 
   <Teleport to="body">
-    <ItemEditor :openEditor :todo @close-dialog="() => (openEditor = false)" />
+    <ItemEditor
+      :openEditor
+      :todo
+      @cancel="() => (openEditor = false)"
+      @submit="handleSubmit"
+    />
   </Teleport>
 </template>
 
@@ -43,10 +48,10 @@ const props = defineProps<{
   todo: Todo;
 }>();
 
-const emit = defineEmits(["toggle-details"]);
+const emit = defineEmits(["toggle-details", "update-todo"]);
 
 const todo = ref(props.todo);
-const { updateStatus, deleteTodo } = useTodosStore();
+const { updateTodo, deleteTodo } = useTodosStore();
 const showDetails = ref(false);
 const openEditor = ref(false);
 
@@ -55,8 +60,14 @@ const toggleDetails = () => {
   emit("toggle-details", showDetails.value);
 };
 
-const handleStatusChange = () => {
-  todo.value = updateStatus(todo.value.id, todo.value.status);
+const handleStatusChange = async () => {
+  todo.value = await updateTodo(todo.value.id, { status: todo.value.status });
+  emit("update-todo", todo.value);
+};
+
+const handleSubmit = (updatedTodo: Todo) => {
+  emit("update-todo", updatedTodo);
+  openEditor.value = false;
 };
 </script>
 

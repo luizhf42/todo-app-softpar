@@ -4,14 +4,18 @@
       <h3>
         {{ todo.title }}
       </h3>
-      <ItemActions @toggle-details="updateShowDetails" :todo />
+      <ItemActions
+        @toggle-details="updateShowDetails"
+        :todo
+        @update-todo="updateTodo"
+      />
     </div>
     <transition name="details-fade">
       <div v-show="showDetails" class="details">
         <p>{{ todo.description }}</p>
-        <div>Criada em {{ formatDate(todo.createdAt) }}</div>
-        <div v-if="todo.completedAt">
-          Concluída em {{ formatDate(todo.completedAt) }}
+        <div>Criada em {{ formatDate(todo.created_at) }}</div>
+        <div v-if="todo.completed_at">
+          Concluída em {{ formatDate(todo.completed_at) }}
         </div>
       </div>
     </transition>
@@ -27,18 +31,29 @@ const props = defineProps<{
   todo: Todo;
 }>();
 
-const { todo } = props;
+const todo = ref(props.todo);
+
 const showDetails = ref(false);
 
 const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat("pt-BR", {
+  console.log(date);
+
+  const newDate = new Intl.DateTimeFormat("pt-BR", {
     dateStyle: "short",
     timeStyle: "short",
-  }).format(date);
+  }).format(new Date(date));
+  console.log(newDate);
+
+  return newDate;
 };
 
 const updateShowDetails = (newShowDetails: boolean) => {
   showDetails.value = newShowDetails;
+};
+
+const updateTodo = (newTodo: Todo) => {
+  console.log(newTodo)
+  todo.value = newTodo;
 };
 </script>
 

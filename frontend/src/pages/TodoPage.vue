@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onBeforeMount } from "vue";
 import { useTodosStore } from "src/stores/todos";
 import TodoForm from "src/components/Todo/Form.vue";
 import TodoFilters from "src/components/Todo/Filters.vue";
@@ -42,14 +42,14 @@ const filteredAndOrderedTodos = computed(() => {
   if (filterDate.value) {
     const selectedDate = new Date(filterDate.value).toISOString().split("T")[0];
     todos = todos.filter((todo) => {
-      const createdDate = new Date(todo.createdAt).toISOString().split("T")[0];
+      const createdDate = new Date(todo.created_at).toISOString().split("T")[0];
       return createdDate === selectedDate;
     });
   }
 
   todos.sort((a, b) => {
     if (orderBy.value === "date") {
-      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
     } else if (orderBy.value === "title") {
       return a.title.localeCompare(b.title);
     }
@@ -57,6 +57,10 @@ const filteredAndOrderedTodos = computed(() => {
   });
 
   return todos;
+});
+
+onBeforeMount(() => {
+  todoStore.fetchTodos();
 });
 </script>
 
