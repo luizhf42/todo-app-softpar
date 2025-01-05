@@ -1,53 +1,80 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
+import axios from "axios";
+import type { AxiosError } from "axios";
 import type { Todo } from "src/types/todo";
 
 export const useTodosStore = defineStore("todos", () => {
-  const todos = ref<Todo[]>([]);
-  const nextId = ref(1);
+  const API_BASE_URL = "http://localhost:8000/api/todos";
+  const isLoading = ref(false);
+  const error = ref<string | null>(null);
 
-  const createTodo = (title: string, description: string) => {
-    const newTodo: Todo = {
-      id: nextId.value++,
+  const fetchTodos = async () => {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      const response = await axios.get<Todo[]>(API_BASE_URL);
+      todos.value = response.data;
+    } catch (err) {
+      const axiosError = err as AxiosError;
+      error.value = axiosError.message || "Failed to fetch todos.";
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const todos = ref<Todo[]>([]);
+
+  const createTodo = async (title: string, description: string) => {
+    const newTodo: Partial<Todo> = {
       title,
       description,
-      createdAt: new Date(),
-      completedAt: null,
+      created_at: new Date(),
+      completed_at: null,
       status: "pending",
     };
-    todos.value.push(newTodo);
-  };
 
-  const updateTodo = (id: number, updates: Partial<Todo>) => {
-    const todo = todos.value.find((todo) => todo.id === id);
-    if (todo) {
-      Object.assign(todo, updates);
+    try {
+      const response = await axios.post<Todo>(API_BASE_URL, newTodo);
+      todos.value.push(response.data);
+    } catch (err) {
+      const axiosError = err as AxiosError;
+      error.value = axiosError.message || "Failed to create todo.";
     }
-    console.log(todo, updates);
   };
 
-  const deleteTodo = (id: number) => {
-    todos.value = todos.value.filter((todo) => todo.id !== id);
-  };
-
-  const updateStatus = (
-    id: number,
-    status: "pending" | "in progress" | "completed"
-  ) => {
-    const todo = todos.value.find((todo) => todo.id === id);
-    if (todo) {
-      todo.status = status;
-      todo.completedAt = status === "completed" ? new Date() : null;
+  const updateTodo = async (id: number, updates: Partial<Todo>) => {
+    const updatedTodo = ref<Todo>();
+    try {
+      const response = await axios.put<Todo>(`${API_BASE_URL}/${id}`, updates);
+      updatedTodo.value = response.data;
+      const todoIndex = todos.value.indexOf(updatedTodo.value);
+      todos.value[todoIndex] = updatedTodo.value!;
+    } catch (err) {
+      const axiosError = err as AxiosError;
+      error.value = axiosError.message || "Failed to update status.";
     }
 
-    return todo!;
+    return updatedTodo.value!;
+  };
+
+  const deleteTodo = async (id: number) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/${id}`);
+      todos.value = todos.value.filter((todo) => todo.id !== id);
+    } catch (err) {
+      const axiosError = err as AxiosError;
+      error.value = axiosError.message || "Failed to delete todo.";
+    }
   };
 
   return {
     todos,
+    isLoading,
+    error,
+    fetchTodos,
     createTodo,
     updateTodo,
     deleteTodo,
-    updateStatus,
   };
 });
